@@ -1,0 +1,308 @@
+openapi: 3.0.3
+info:
+  title: Task Manager API
+  version: 1.0.0
+paths:
+  /api/notification/mail/send/:
+    get:
+      operationId: notification_mail_send_retrieve
+      tags:
+      - notification
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/notification/telegram/send/:
+    get:
+      operationId: notification_telegram_send_retrieve
+      tags:
+      - notification
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/tasktracker/status/get/:
+    get:
+      operationId: tasktracker_status_get_retrieve
+      tags:
+      - tasktracker
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/tasktracker/status/set/:
+    get:
+      operationId: tasktracker_status_set_retrieve
+      tags:
+      - tasktracker
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/tasktracker/task/create/:
+    post:
+      operationId: tasktracker_task_create_create
+      tags:
+      - tasktracker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Task'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Task'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/tasktracker/task/delete/:
+    delete:
+      operationId: tasktracker_task_delete_destroy
+      tags:
+      - tasktracker
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/tasktracker/task/get/:
+    get:
+      operationId: tasktracker_task_get_retrieve
+      tags:
+      - tasktracker
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/tasktracker/task/observe/:
+    post:
+      operationId: tasktracker_task_observe_create
+      tags:
+      - tasktracker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Task'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Task'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/tasktracker/task/update/:
+    put:
+      operationId: tasktracker_task_update_update
+      tags:
+      - tasktracker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Task'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Task'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/user/create/:
+    post:
+      operationId: user_create_create
+      tags:
+      - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/user/delete/:
+    delete:
+      operationId: user_delete_destroy
+      tags:
+      - user
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/user/get/:
+    get:
+      operationId: user_get_retrieve
+      tags:
+      - user
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/user/update/:
+    put:
+      operationId: user_update_update
+      tags:
+      - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+components:
+  schemas:
+    StatusEnum:
+      enum:
+      - PLANNED
+      - ACTIVE
+      - ON_CHECK
+      - DONE
+      - FAILED
+      - EXPIRED
+      type: string
+      description: |-
+        * `PLANNED` - PLANNED
+        * `ACTIVE` - ACTIVE
+        * `ON_CHECK` - ON_CHECK
+        * `DONE` - DONE
+        * `FAILED` - FAILED
+        * `EXPIRED` - EXPIRED
+    Task:
+      type: object
+      properties:
+        task_id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+        executor:
+          type: integer
+          nullable: true
+        observers:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        time_start:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        time_end:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        time_deadline:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - observers
+      - status
+      - task_id
+      - time_end
+      - time_start
+    User:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        telegram:
+          type: string
+          maxLength: 32
+      required:
+      - email
+      - name
+      - telegram
+      - user_id
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
