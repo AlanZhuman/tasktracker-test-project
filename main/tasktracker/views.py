@@ -1,14 +1,17 @@
 from django.shortcuts import render
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import *
 from rest_framework.response import Response
 from .selectors import *
 from .services import *
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
+from main.permissions import *
 
 @extend_schema(request=TaskSerializer, responses=None)
 @api_view(['POST'])
+@permission_classes([IsAuthenticated | IsCUD])
 def task_create(request):
     status_code, response = create_task(request)
     if status_code == 200:
@@ -44,6 +47,7 @@ def all_tasks_get(request):
 
 @extend_schema(request=TaskSerializer, responses=None)
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated | IsCUD])
 def task_update(request, task_slug):
     status_code, response = update_task(request, task_slug)
     
@@ -56,6 +60,7 @@ def task_update(request, task_slug):
 
 @extend_schema(request=TaskSerializer, responses=None)
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated | IsCUD])
 def task_delete(request, task_slug):
     status_code, response = delete_task(task_slug)
     
@@ -80,6 +85,7 @@ def task_observe(request, task_slug):
 
 @extend_schema(request=StatusSerializer, responses=None)
 @api_view(['POST'])
+@permission_classes([IsAuthenticated | IsCUD])
 def status_set(request, task_slug):
     status_code, response = set_status(request, task_slug)
     

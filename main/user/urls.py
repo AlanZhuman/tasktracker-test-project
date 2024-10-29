@@ -7,4 +7,5 @@ urlpatterns = [
     path('get/<str:nickname>/', views.user_get, name='user-get'),
     path('update/<str:nickname>/', views.user_update, name='user-update'),
     path('delete/<str:nickname>/', views.user_delete, name='user-delete'),
+    path('set-permission/<str:nickname>/', views.user_set_permission, name='user-set-permission'),
 ]
