@@ -1,21 +1,30 @@
 from rest_framework import permissions
 
-class IsCUD(permissions.BasePermission):
+class IsCRUD(permissions.BasePermission):
     """
-    CUD Permission check for users
+    CRUD Permission check for users
     """
     def has_permission(self, request, view):
-        return request.user.groups.filter(name='CUD-user').exists()
+        return request.user.groups.filter(name='CRUD-user').exists()
     
-class IsRead(permissions.BasePermission):
+class IsReadTask(permissions.BasePermission):
     """
-    Read Permission check for users
+    Read Permission check for users and Task model
     """
     def has_permission(self, request, view):
         return request.user.groups.filter(name='R-user').exists()
     
     def has_object_permission(self, request, view, obj):
         return request.user in obj.observers.all()
+    
+    
+    
+class IsSameUser(permissions.BasePermission):
+    '''
+    Permission to check is request.user the same with "User" model instance
+    '''
+    def has_object_permission(self, request, view, obj):
+        return request.user == obj
     
 class IsPm(permissions.BasePermission):
     """

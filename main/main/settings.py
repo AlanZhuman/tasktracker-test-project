@@ -134,6 +134,11 @@ REST_FRAMEWORK = {
     ]
 }
 
+# Celery settings
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+
+
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Task Manager API',
     'DESCRIPTION': '',
@@ -145,7 +150,7 @@ SPECTACULAR_SETTINGS = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,

@@ -55,8 +55,8 @@ class UserRoleSetSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         permission = validated_data.get('role')
 
-        if permission == 'CUD' or permission == 'CUD-user':
-            cud_user_group = Group.objects.get(name='CUD-user')
+        if permission == 'CRUD' or permission == 'CRUD-user':
+            cud_user_group = Group.objects.get(name='CRUD-user')
             instance.groups.add(cud_user_group)
             return instance
         

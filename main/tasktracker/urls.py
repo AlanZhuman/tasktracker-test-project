@@ -9,4 +9,5 @@ urlpatterns = [
     path('task/delete/<slug:task_slug>/', views.task_delete, name='task-delete'),
     path('task/observe/<slug:task_slug>/', views.task_observe, name='task-observe'),
     path('status/set/<slug:task_slug>/', views.status_set, name='status-set'),
+    path('status/get/<slug:task_slug>/', views.status_get, name='status-get'),
 ]

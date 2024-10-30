@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Task, User, Status
 from user.serializers import UserInnerSerializer
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 
 class TaskSerializer(serializers.ModelSerializer):
     task_id = serializers.IntegerField(source='id', read_only=True)
@@ -11,7 +12,7 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = ('task_id', 'name', 'slug', 'description', 'executor', 'observers', 'status', 'time_start', 'time_end', 'time_deadline')
-        read_only_fields = ('task_id', 'slug')  
+        read_only_fields = ('task_id', 'slug', 'status', 'time_start', 'time_end')  
 
     def create(self, validated_data):
         executor_data = validated_data.pop('executor', [])
@@ -25,7 +26,7 @@ class TaskSerializer(serializers.ModelSerializer):
                     user = User.objects.get(name=user_name)
                     task.executor.add(user)
                 except ObjectDoesNotExist:
-                    continue  # Игнорируем пользователей, которые не найдены
+                    continue
         
         if observers_data:
             for user_data in observers_data:
@@ -34,7 +35,7 @@ class TaskSerializer(serializers.ModelSerializer):
                     user = User.objects.get(name=user_name)
                     task.observers.add(user)
                 except ObjectDoesNotExist:
-                    continue  # Игнорируем пользователей, которые не найдены
+                    continue
 
         return task
 
@@ -45,9 +46,6 @@ class TaskSerializer(serializers.ModelSerializer):
         # Обновляем основные поля задачи
         instance.name = validated_data.get('name', instance.name)
         instance.description = validated_data.get('description', instance.description)
-        instance.status = validated_data.get('status', instance.status)
-        instance.time_start = validated_data.get('time_start', instance.time_start)
-        instance.time_end = validated_data.get('time_end', instance.time_end)
         instance.time_deadline = validated_data.get('time_deadline', instance.time_deadline)
         instance.save()
 
@@ -103,14 +101,20 @@ class StatusSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Status
-        fields = ('previous_status', 'next_status', 'task', 'edit_author')
+        fields = ('previous_status', 'set_status', 'task', 'edit_author')
         read_only_fields = ('previous_status', 'task')
 
     def update(self, instance, validated_data):
         status_copy = instance.status # Нужно чтобы скопировать старый статус в Status.previous_status
 
-        # Присвоение инстансу (Task-объекту) нового статуса из next_status и последующее сохранение
-        instance.status = validated_data.get('next_status')
+        # Присвоение инстансу (Task-объекту) нового статуса из set_status и последующее сохранение
+        instance.status = validated_data.get('set_status')
+
+        if validated_data.get('set_status') == Task.Statuses.ACTIVE:
+            instance.time_start = timezone.now()
+        elif validated_data.get('set_status') == Task.Statuses.DONE:
+            instance.time_end = timezone.now()
+
         instance.save()
         # Получение имени автора из data и попытка получить весь объект User (Нужен при создании или изменении Status-объекта)
         name_data = validated_data.get('edit_author', 'unknown')
@@ -124,11 +128,12 @@ class StatusSerializer(serializers.ModelSerializer):
         try:
             status_rel = instance.status_log
             status_rel.previous_status = status_copy
-            status_rel.next_status = validated_data.get('next_status', status_rel.next_status)
+            status_rel.set_status = validated_data.get('set_status', status_rel.set_status)
             status_rel.edit_author = user_author
             status_rel.save()
         # Status-объект не существует - создаем
         except ObjectDoesNotExist:
+            validated_data.pop('edit_author', None)
             status_rel = Status.objects.create(edit_author=user_author, task=instance, **validated_data)     
         # Возвращаем информацию об созданном (измененном) объекте Status
         return status_rel

@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import *
 from rest_framework.response import Response
 from .selectors import *
 from .services import *
+from main.permissions import *
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
 
@@ -12,6 +14,7 @@ from drf_spectacular.types import OpenApiTypes
         responses=None
 )
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def user_create(request):
     status_code, response = create_user(request)
     if status_code == 200:
@@ -26,6 +29,7 @@ def user_create(request):
         responses=None
 )    
 @api_view(['GET'])
+@permission_classes([IsAuthenticated | IsSameUser])
 def user_get(request, nickname):
     status_code, response = get_user(nickname)
     
@@ -37,6 +41,7 @@ def user_get(request, nickname):
         return Response({'error': response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated | IsAdminUser])
 def user_all_get(request):
     status_code, response = get_all_users()
     
@@ -52,6 +57,7 @@ def user_all_get(request):
         responses=None
 )
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated | IsSameUser])
 def user_update(request, nickname):
     status_code, response = update_user(request, nickname)
     
@@ -67,6 +73,7 @@ def user_update(request, nickname):
         responses=None
 )
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated | IsSameUser])
 def user_delete(request, nickname):
     status_code, response = delete_user(nickname)
     
@@ -82,6 +89,7 @@ def user_delete(request, nickname):
         responses=None
 )
 @api_view(['POST'])
+@permission_classes([IsAuthenticated | IsAdminUser])
 def user_set_permission(request, nickname):
     status_code, response = set_permission_user(request, nickname)
     

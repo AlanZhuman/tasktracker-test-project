@@ -16,7 +16,7 @@ class Task(models.Model):
     description = models.TextField(blank=True)
     executor = models.ManyToManyField(User, related_name='tasks_as_executor')
     observers = models.ManyToManyField(User, related_name='tasks_as_observer')
-    status = models.CharField(choices=Statuses.choices, max_length=15)
+    status = models.CharField(choices=Statuses.choices, max_length=15, default=Statuses.PLANNED)
     time_start = models.DateTimeField(blank=True, null=True)
     time_end = models.DateTimeField(blank=True, null=True)
     time_deadline = models.DateTimeField(blank=True, null=True)
@@ -38,7 +38,7 @@ class Status(models.Model):
         EXPIRED = 'EXPIRED', 'EXPIRED'
 
     previous_status = models.CharField(choices=Statuses.choices, max_length=15, blank=True, null=True)
-    next_status = models.CharField(choices=Statuses.choices, max_length=15, default=Statuses.PLANNED, blank=True, null=True)
+    set_status = models.CharField(choices=Statuses.choices, max_length=15, default=Statuses.PLANNED, blank=True, null=True)
     task = models.OneToOneField(Task, related_name='status_log', on_delete=models.CASCADE)
     edit_author = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
 
