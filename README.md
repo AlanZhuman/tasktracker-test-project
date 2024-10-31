@@ -10,7 +10,7 @@
 
 ## 🚀 Как запустить проект?
 1. Склонируйте репозиторий:  
-   `git clone [https://github.com/AlanZhuman/tasktracker-test-project.git]`
+   `git clone (https://github.com/AlanZhuman/tasktracker-test-project.git)`
    
 2. Перейдите в корневую папку проекта (не в main/main, просто в ./, где находится файл docker-compose.yml):  
    
@@ -38,7 +38,7 @@
 
 ## 🚀 How to Start the Project?
 1. Clone the repository:  
-   `git clone [https://github.com/AlanZhuman/tasktracker-test-project.git]`
+   `git clone (https://github.com/AlanZhuman/tasktracker-test-project.git)`
    
 2. Navigate to the main project folder (not in main/main, just in ./ where docker-compose.yml is located):  
    
