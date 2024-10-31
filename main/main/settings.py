@@ -18,7 +18,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 
 # Application definition
@@ -79,8 +79,8 @@ DATABASES = {
         'NAME': 'task_db',
         'USER': 'taskuser',
         'PASSWORD': 'admin',
-        'HOST': 'localhost',
-        'PORT': '',
+        'HOST': 'postgres',
+        'PORT': '5432',
     }
 }
 
@@ -136,7 +136,7 @@ REST_FRAMEWORK = {
 
 # Celery settings
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = 'redis://redis:6379/0'
 
 
 SPECTACULAR_SETTINGS = {

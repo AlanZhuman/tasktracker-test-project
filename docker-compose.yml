@@ -1,0 +1,78 @@
+version: '3.8'
+
+volumes:
+  pgdata:
+  static:
+  media:
+
+services:
+
+  django:
+    build:
+      context: .
+    ports:
+      - '8000:8000'
+    container_name: django
+    env_file:
+      - .env.dev
+    volumes:
+      - ./:/app
+      - static:/app/static
+      - media:/app/media
+    depends_on:
+      - postgres
+      - redis
+    command: sh -c "poetry config virtualenvs.create true &&
+                    cd main &&
+                    python manage.py makemigrations &&
+                    python manage.py migrate &&
+                    python manage.py runserver 0.0.0.0:8000"
+
+  postgres:
+    image: postgres:alpine
+    container_name: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=taskuser
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=task_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  
+  redis:
+    image: redis:alpine
+    container_name: redis
+    env_file:
+      - .env.dev
+    expose:
+      - 6379
+    volumes:
+      - ./docker/redis/data:/data
+  
+  celery-worker:
+    build: .
+    container_name: celery-worker
+    restart: always
+    env_file:
+      - .env.dev
+    volumes:
+      - ./:/app
+      - media:/app/media
+    command: sh -c "cd main &&
+                    celery -A main worker --loglevel=INFO"
+    depends_on:
+      - redis
+  
+  celery-beat:
+      build: .
+      container_name: celery-beat
+      env_file:
+          - .env.dev
+      depends_on: 
+          - redis
+      command: sh -c "cd main &&
+                    celery -A main worker --loglevel=INFO"
+      volumes:
+          - media:/app/media
+          - ./:/app

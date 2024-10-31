@@ -1,4 +1,5 @@
 .env 
+.env.dev
 .venv 
 env/ 
 venv/ 
@@ -11,3 +12,6 @@ venv.bak/
 __pycache__
 db.sqlite3
 media
+docker/
+media/
+static/
