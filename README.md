@@ -1,7 +1,3 @@
-# 📦 Проект
-
-Добро пожаловать в наш проект! Этот репозиторий содержит все необходимые файлы и инструкции для его развертывания.
-
 ## 📚 Документация API
 [Документация API](http://127.0.0.1:8000/api/schema/swagger-ui/#/)
 
@@ -30,10 +26,6 @@
    [http://127.0.0.1:8000/api/schema/swagger-ui/#/](http://127.0.0.1:8000/api/schema/swagger-ui/#/) или [http://0.0.0.0:8000/api/schema/swagger-ui/#/](http://0.0.0.0:8000/api/schema/swagger-ui/#/)
 
 ---
-
-# 📦 Project
-
-Welcome to our project! This repository contains all the necessary files and instructions for deployment.
 
 ## 📚 API Documentation
 [API Documentation](http://127.0.0.1:8000/api/schema/swagger-ui/#/)
