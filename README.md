@@ -10,10 +10,9 @@
 
 ## 🚀 Как запустить проект?
 1. Склонируйте репозиторий:  
-   `git clone [ссылка на репозиторий]`
+   `git clone [https://github.com/AlanZhuman/tasktracker-test-project.git]`
    
 2. Перейдите в корневую папку проекта (не в main/main, просто в ./, где находится файл docker-compose.yml):  
-   `cd путь/к/вашему/проекту`
    
 3. Заполните файл `.env.dev` своими данными. Пример можно найти в файле `.env_example` (ВАЖНО: не используйте файл .env, создайте .env.dev или измените имя .env в docker-compose.yml).
    
@@ -39,10 +38,9 @@
 
 ## 🚀 How to Start the Project?
 1. Clone the repository:  
-   `git clone [repo link]`
+   `git clone [https://github.com/AlanZhuman/tasktracker-test-project.git]`
    
 2. Navigate to the main project folder (not in main/main, just in ./ where docker-compose.yml is located):  
-   `cd path/to/your/project`
    
 3. Fill up the `.env.dev` file with your own data. An example can be found in the `.env_example` file (IMPORTANT: DO NOT use the .env file; create .env.dev or change the .env filename in docker-compose.yml).
    
