@@ -25,7 +25,7 @@
    [http://127.0.0.1:8000/api/schema/swagger-ui/#/](http://127.0.0.1:8000/api/schema/swagger-ui/#/) или [http://0.0.0.0:8000/api/schema/swagger-ui/#/](http://0.0.0.0:8000/api/schema/swagger-ui/#/)
 
 7. ВАЖНО: Возможно после запуска будет необходимость в следующих действиях:
-   1. Зайти в Django сервис через консоль при помощи команды `$ docker exec -i -t django /bin/bash`
+   1. Зайти в Django сервис через консоль при помощи команды `$ docker exec -i -t django /bin/bash` и `$ cd main`
    2. Создать суперпользователя
    3. Авторизоваться в Django Admin
    4. Создать группы доступа со следующими названиями: `"CRUD-user", "R-User", 'Pm-user"`
@@ -60,7 +60,7 @@
    [http://127.0.0.1:8000/api/schema/swagger-ui/#/](http://127.0.0.1:8000/api/schema/swagger-ui/#/) or [http://0.0.0.0:8000/api/schema/swagger-ui/#/](http://0.0.0.0:8000/api/schema/swagger-ui/#/)
 
 7. IMPORTANT: The following actions may be necessary after startup:
-   1. Enter Django service through the console with `$ docker exec -i -t django /bin/bash`
+   1. Enter Django service through the console with `$ docker exec -i -t django /bin/bash` and `$ cd main`
    2. Create a superuser
    3. Authorize in Django Admin
    4. Create access groups with the following names: 'CRUD-user', 'R-User', 'Pm-user'
