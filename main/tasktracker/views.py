@@ -11,7 +11,7 @@ from main.permissions import *
 
 @extend_schema(request=TaskSerializer, responses=None)
 @api_view(['POST'])
-@permission_classes([IsAuthenticated | IsCRUD])
+@permission_classes([IsAuthenticated & IsCRUD])
 def task_create(request):
     status_code, response = create_task(request)
     if status_code == 200:
@@ -49,7 +49,7 @@ def all_tasks_get(request):
 
 @extend_schema(request=TaskSerializer, responses=None)
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated | IsCRUD])
+@permission_classes([IsAuthenticated & IsCRUD])
 def task_update(request, task_slug):
     status_code, response = update_task(request, task_slug)
     
@@ -62,7 +62,7 @@ def task_update(request, task_slug):
 
 @extend_schema(request=TaskSerializer, responses=None)
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated | IsCRUD])
+@permission_classes([IsAuthenticated & IsCRUD])
 def task_delete(request, task_slug):
     status_code, response = delete_task(task_slug)
     
@@ -101,7 +101,7 @@ def task_unobserve(request, task_slug):
 
 @extend_schema(request=StatusSerializer, responses=None)
 @api_view(['POST'])
-@permission_classes([IsAuthenticated | IsCRUD])
+@permission_classes([IsAuthenticated & IsCRUD])
 def status_set(request, task_slug):
     status_code, response = set_status(request, task_slug)
     
@@ -114,7 +114,7 @@ def status_set(request, task_slug):
 
 @extend_schema(request=StatusSerializer, responses=None)
 @api_view(['GET'])
-@permission_classes([IsAuthenticated | IsReadTask])
+@permission_classes([IsAuthenticated & IsReadTask])
 def status_get(request, task_slug):
     status_code, response = get_status(task_slug)
     
