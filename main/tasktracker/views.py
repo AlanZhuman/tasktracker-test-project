@@ -86,6 +86,19 @@ def task_observe(request, task_slug):
     else:
         return Response({'error': response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@extend_schema(request=TaskObserveSerializer, responses=None)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def task_unobserve(request, task_slug):
+    status_code, response = unobserve_task(request, task_slug)
+    
+    if status_code == 200:
+        return Response(response, status=status.HTTP_202_ACCEPTED)
+    elif status_code == 404:
+        return Response({'error': 'No task found.'}, status=status.HTTP_404_NOT_FOUND)
+    else:
+        return Response({'error': response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 @extend_schema(request=StatusSerializer, responses=None)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated | IsCRUD])

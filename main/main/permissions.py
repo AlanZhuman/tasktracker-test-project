@@ -15,7 +15,7 @@ class IsReadTask(permissions.BasePermission):
         return request.user.groups.filter(name='R-user').exists()
     
     def has_object_permission(self, request, view, obj):
-        return request.user in obj.observers.all()
+        return request.user in obj.observers.all() or request.user in obj.executor.all()
     
     
     

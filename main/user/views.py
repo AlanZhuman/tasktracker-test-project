@@ -99,3 +99,19 @@ def user_set_permission(request, nickname):
         return Response({'error': 'No user found.'}, status=status.HTTP_404_NOT_FOUND)
     else:
         return Response({'error': response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@extend_schema(
+        request=UserRoleSetSerializer,
+        responses=None
+)    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated | IsAdminUser])
+def user_delete_permission(request, nickname):
+    status_code, response = delete_permission_user(request, nickname)
+    
+    if status_code == 202:
+        return Response(response, status=status.HTTP_202_ACCEPTED)
+    elif status_code == 404:
+        return Response({'error': 'No user found.'}, status=status.HTTP_404_NOT_FOUND)
+    else:
+        return Response({'error': response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

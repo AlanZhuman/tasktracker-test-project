@@ -8,6 +8,7 @@ urlpatterns = [
     path('task/update/<slug:task_slug>/', views.task_update, name='task-update'),
     path('task/delete/<slug:task_slug>/', views.task_delete, name='task-delete'),
     path('task/observe/<slug:task_slug>/', views.task_observe, name='task-observe'),
+    path('task/unobserve/<slug:task_slug>/', views.task_unobserve, name='task-unobserve'),
     path('status/set/<slug:task_slug>/', views.status_set, name='status-set'),
     path('status/get/<slug:task_slug>/', views.status_get, name='status-get'),
 ]

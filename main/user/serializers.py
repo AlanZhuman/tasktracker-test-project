@@ -53,16 +53,28 @@ class UserRoleSetSerializer(serializers.ModelSerializer):
         read_only_fields = ('user_id', '')
 
     def update(self, instance, validated_data):
+        isSet = self.context.get('isSet')
         permission = validated_data.get('role')
 
-        if permission == 'CRUD' or permission == 'CRUD-user':
-            cud_user_group = Group.objects.get(name='CRUD-user')
-            instance.groups.add(cud_user_group)
-            return instance
-        
-        elif permission == 'Pm' or permission == 'Pm-user':
-            pm_user_group = Group.objects.get(name='Pm-user')
-            instance.groups.add(pm_user_group)
-            return instance
-
-        else: return False
+        if isSet:
+            if permission == 'CRUD' or permission == 'CRUD-user':
+                cud_user_group = Group.objects.get(name='CRUD-user')
+                instance.groups.add(cud_user_group)
+                return instance
+            
+            elif permission == 'Pm' or permission == 'Pm-user':
+                pm_user_group = Group.objects.get(name='Pm-user')
+                instance.groups.add(pm_user_group)
+                return instance
+            else: return False
+        else:
+            if permission == 'CRUD' or permission == 'CRUD-user':
+                cud_user_group = Group.objects.get(name='CRUD-user')
+                instance.groups.remove(cud_user_group)
+                return instance
+            
+            elif permission == 'Pm' or permission == 'Pm-user':
+                pm_user_group = Group.objects.get(name='Pm-user')
+                instance.groups.remove(pm_user_group)
+                return instance
+            else: return False

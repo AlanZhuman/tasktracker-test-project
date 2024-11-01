@@ -75,22 +75,30 @@ class TaskSerializer(serializers.ModelSerializer):
 
 class TaskObserveSerializer(serializers.ModelSerializer):
     task_id = serializers.IntegerField(source='id', read_only=True)
-    observers = UserInnerSerializer()
 
     class Meta:
         model = Task
-        fields = ('task_id', 'slug', 'observers')
+        fields = ('task_id', 'slug')
         read_only_fields = ('task_id', 'slug')  
 
     def update(self, instance, validated_data):
-        observer_data = validated_data.get('observers', [])
-        
-        user_name = observer_data['name']
-        try:
-            user = User.objects.get(name=user_name)
-            instance.observers.add(user)
-        except ObjectDoesNotExist:
+        isObserve = self.context.get('isObserve')
+        user = self.context.get('user_instance')
+        user_name = user.name
+        if not user_name:
             return False
+        if isObserve:
+            try:
+                user = User.objects.get(name=user_name)
+                instance.observers.add(user)
+            except ObjectDoesNotExist:
+                return False
+        else:
+            try:
+                user = User.objects.get(name=user_name)
+                instance.observers.remove(user)
+            except ObjectDoesNotExist:
+                return False
         
         return instance
 

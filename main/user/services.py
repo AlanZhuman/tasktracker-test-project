@@ -39,12 +39,31 @@ def set_permission_user(request, name):
         item = User.objects.get(name=name)
     except User.DoesNotExist:
         return 404, {'error': 'User not found.'}
+    
+    isSet = True
 
-    data = UserRoleSetSerializer(instance = item, data=request.data)
+    data = UserRoleSetSerializer(instance = item, data=request.data, context={'isSet': isSet})
 
     if data.is_valid():
         data.save()
         return 200, data.data
+    elif data.is_valid() == False:
+        return 400, {'error': 'Provided data is invalid'}
+    return 500, {'Serializer error:': data.errors}
+
+def delete_permission_user(request, name):
+    try:
+        item = User.objects.get(name=name)
+    except User.DoesNotExist:
+        return 404, {'error': 'User not found.'}
+
+    isSet = False
+
+    data = UserRoleSetSerializer(instance = item, data=request.data, context={'isSet': isSet})
+
+    if data.is_valid():
+        data.save()
+        return 202, data.data
     elif data.is_valid() == False:
         return 400, {'error': 'Provided data is invalid'}
     return 500, {'Serializer error:': data.errors}

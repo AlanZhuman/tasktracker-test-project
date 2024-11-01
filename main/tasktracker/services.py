@@ -62,7 +62,26 @@ def observe_task(request, slug):
     except Task.DoesNotExist:
         return 404, {'error': 'Task not found.'}
     
-    data = TaskObserveSerializer(instance = item, data=request.data)
+    isObserve = True
+    
+    data = TaskObserveSerializer(instance = item, data=request.data, context={'isObserve': isObserve, 'user_instance':request.user})
+
+    if data.is_valid():
+        data.save()
+        return 200, data.data
+    elif data.is_valid() == False:
+        return 400, {'error': 'Provided data is invalid'}
+    return 500, {'Serializer error:': data.errors}
+
+def unobserve_task(request, slug):
+    try:
+        item = Task.objects.get(slug=slug)
+    except Task.DoesNotExist:
+        return 404, {'error': 'Task not found.'}
+    
+    isObserve = False
+    
+    data = TaskObserveSerializer(instance = item, data=request.data, context={'isObserve': isObserve, 'user_instance':request.user})
 
     if data.is_valid():
         data.save()
