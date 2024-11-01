@@ -29,8 +29,15 @@ def user_create(request):
         responses=None
 )    
 @api_view(['GET'])
-@permission_classes([IsAuthenticated & IsSameUser])
+@permission_classes([IsAuthenticated & (IsAdminUser | IsSameUser)])
 def user_get(request, nickname):
+    try:
+        user = User.objects.get(name=nickname)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if not IsSameUser().has_object_permission(request, None, user):
+        return Response({'detail': 'Permission denied.'}, status=status.HTTP_403_FORBIDDEN)
+
     status_code, response = get_user(nickname)
     
     if status_code == 200:
@@ -57,8 +64,15 @@ def user_all_get(request):
         responses=None
 )
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated & IsSameUser])
+@permission_classes([IsAuthenticated & (IsAdminUser | IsSameUser)])
 def user_update(request, nickname):
+    try:
+        user = User.objects.get(name=nickname)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if not IsSameUser().has_object_permission(request, None, user):
+        return Response({'detail': 'Permission denied.'}, status=status.HTTP_403_FORBIDDEN)
+
     status_code, response = update_user(request, nickname)
     
     if status_code == 200:
@@ -68,13 +82,17 @@ def user_update(request, nickname):
     else:
         return Response({'error': response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@extend_schema(
-        request=UserSerializer,
-        responses=None
-)
+@extend_schema(request=UserSerializer, responses=None)
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated & IsSameUser])
-def user_delete(request, nickname):
+@permission_classes([IsAuthenticated & (IsAdminUser | IsSameUser)])
+def user_delete(request, nickname): 
+    try:
+        user = User.objects.get(name=nickname)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if not IsSameUser().has_object_permission(request, None, user):
+        return Response({'detail': 'Permission denied.'}, status=status.HTTP_403_FORBIDDEN)
+
     status_code, response = delete_user(nickname)
     
     if status_code == 204:

@@ -21,10 +21,10 @@ class IsReadTask(permissions.BasePermission):
     
 class IsSameUser(permissions.BasePermission):
     '''
-    Permission to check is request.user the same with "User" model instance
+    Permission to check if request.user is the same as the "User" model instance
     '''
     def has_object_permission(self, request, view, obj):
-        return request.user == obj
+        return request.user == obj or request.user.is_staff == True
     
 class IsPm(permissions.BasePermission):
     """
