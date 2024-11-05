@@ -14,7 +14,7 @@ from drf_spectacular.types import OpenApiTypes
         responses=None
 )
 @api_view(['POST'])
-@permission_classes([IsAuthenticated & IsPm])
+@permission_classes([IsAuthenticated & (IsPm | IsAdminUser)])
 def email_notification(request):
     status_code, response = send_email(request)
 
@@ -30,6 +30,6 @@ def email_notification(request):
         responses=None
 )
 @api_view(['POST'])
-@permission_classes([IsAuthenticated & IsPm])
+@permission_classes([IsAuthenticated & (IsPm | IsAdminUser)])
 def telegram_notification(request):
     return Response('Work in progress', status=status.HTTP_503_SERVICE_UNAVAILABLE)

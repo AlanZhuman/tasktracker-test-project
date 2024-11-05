@@ -1,19 +1,14 @@
 from pathlib import Path
 from datetime import timedelta
 import os
-from dotenv import load_dotenv
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Указываем путь к .env файлу
-env_path = BASE_DIR.parent / '.env'
-
-# Загружаем переменные окружения из файла
-load_dotenv(dotenv_path=env_path)
 
 # Use enviroment file
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,6 +32,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'drf_spectacular',
     'drf_spectacular_sidecar',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -152,8 +148,10 @@ SPECTACULAR_SETTINGS = {
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": False,
+    'ROTATE_REFRESH_TOKENS': True,  # При обновлении токена будет выдан новый refresh токен
+    'BLACKLIST_AFTER_ROTATION': True,  # Старый refresh токен будет добавлен в черный список
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_BLACKLIST_ENABLED': True,  # Включение черного списка
     "UPDATE_LAST_LOGIN": False,
 
     "ALGORITHM": "HS256",
@@ -171,7 +169,6 @@ SIMPLE_JWT = {
     "USER_ID_CLAIM": "user_id",
     "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
 
-    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
     "TOKEN_TYPE_CLAIM": "token_type",
     "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
 

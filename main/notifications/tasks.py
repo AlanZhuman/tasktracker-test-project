@@ -1,4 +1,4 @@
-import os
+from decouple import config
 import smtplib
 from celery import shared_task
 from django.core.exceptions import ObjectDoesNotExist
@@ -12,8 +12,8 @@ from datetime import timedelta
 
 load_dotenv()
 
-email = os.getenv('EMAIL')
-password = os.getenv('EMAIL_PASSWORD')
+email = config('EMAIL')
+password = config('EMAIL_PASSWORD')
 
 @shared_task
 def celery_send_mail(change_type, data):

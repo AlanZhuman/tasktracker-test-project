@@ -1,13 +1,13 @@
 from rest_framework import serializers
 from .models import Task, User, Status
-from user.serializers import UserInnerSerializer
+from user.serializers import UserNameOnlySerializer
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
 class TaskSerializer(serializers.ModelSerializer):
     task_id = serializers.IntegerField(source='id', read_only=True)
-    executor = UserInnerSerializer(many=True)
-    observers = UserInnerSerializer(many=True)
+    executor = UserNameOnlySerializer(many=True)
+    observers = UserNameOnlySerializer(many=True)
 
     class Meta:
         model = Task
@@ -19,23 +19,9 @@ class TaskSerializer(serializers.ModelSerializer):
         observers_data = validated_data.pop('observers', [])
 
         task = Task.objects.create(**validated_data)
-        if executor_data:
-            for user_data in executor_data:
-                user_name = user_data['name']
-                try:
-                    user = User.objects.get(name=user_name)
-                    task.executor.add(user)
-                except ObjectDoesNotExist:
-                    continue
-        
-        if observers_data:
-            for user_data in observers_data:
-                user_name = user_data['name']
-                try:
-                    user = User.objects.get(name=user_name)
-                    task.observers.add(user)
-                except ObjectDoesNotExist:
-                    continue
+
+        task.executor.set(executor_data)
+        task.observers.set(observers_data)
 
         return task
 
@@ -50,26 +36,8 @@ class TaskSerializer(serializers.ModelSerializer):
         instance.save()
 
         # Обновляем исполнителей
-        if executor_data:
-            instance.executor.clear()  # Очистить текущих исполнителей
-            for user_data in executor_data:
-                user_name = user_data['name']
-                try:
-                    user = User.objects.get(name=user_name)
-                    instance.executor.add(user)
-                except ObjectDoesNotExist:
-                    continue  # Игнорируем пользователей, которые не найдены
-        
-        # Обновляем наблюдателей
-        if observers_data:
-            instance.observers.clear()  # Очистить текущих наблюдателей
-            for user_data in observers_data:
-                user_name = user_data['name']
-                try:
-                    user = User.objects.get(name=user_name)
-                    instance.observers.add(user)
-                except ObjectDoesNotExist:
-                    continue  # Игнорируем пользователей, которые не найдены
+        instance.executor.set(executor_data)
+        instance.observers.set(observers_data)
 
         return instance
 
@@ -105,7 +73,7 @@ class TaskObserveSerializer(serializers.ModelSerializer):
 
 
 class StatusSerializer(serializers.ModelSerializer):
-    edit_author = UserInnerSerializer()
+    edit_author = UserNameOnlySerializer()
 
     class Meta:
         model = Status

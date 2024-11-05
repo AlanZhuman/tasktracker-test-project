@@ -14,7 +14,7 @@ services:
       - '8000:8000'
     container_name: django
     env_file:
-      - .env.dev
+      - .env
     volumes:
       - ./:/app
       - static:/app/static
@@ -23,13 +23,10 @@ services:
       - postgres
       - redis
     command: sh -c "poetry config virtualenvs.create true &&
-                    cd main &&
-                    python manage.py makemigrations &&
-                    python manage.py migrate &&
                     python manage.py runserver 0.0.0.0:8000"
 
   postgres:
-    image: postgres:alpine
+    image: postgres:17.0-alpine3.20
     container_name: postgres
     restart: always
     environment:
@@ -38,13 +35,13 @@ services:
       - POSTGRES_DB=task_db
     volumes:
       - pgdata:/var/lib/postgresql/data/
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./entrypoint.sh:/docker-entrypoint-initdb.d/entrypoint.sh
   
   redis:
-    image: redis:alpine
+    image: redis:7.4.1-alpine3.20
     container_name: redis
     env_file:
-      - .env.dev
+      - .env
     expose:
       - 6379
     volumes:
@@ -55,7 +52,7 @@ services:
     container_name: celery-worker
     restart: always
     env_file:
-      - .env.dev
+      - .env
     volumes:
       - ./:/app
       - media:/app/media
@@ -68,11 +65,11 @@ services:
       build: .
       container_name: celery-beat
       env_file:
-          - .env.dev
+          - .env
       depends_on: 
           - redis
       command: sh -c "cd main &&
-                    celery -A main worker --loglevel=INFO"
+                    celery -A main beat --loglevel=INFO"
       volumes:
           - media:/app/media
           - ./:/app

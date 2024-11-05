@@ -13,14 +13,13 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ('user_id', '')
 
     def create(self, validated_data):
-        # Создаем пользователя
         user = User.objects.create_user(
             name=validated_data['name'],
             email=validated_data['email'],
-            password=validated_data['password']
+            password=validated_data['password'],
+            telegram=validated_data['telegram']
         )
 
-        # Находим или создаем группу 'R-user' и добавляем пользователя
         r_user_group = Group.objects.get(name='R-user')
         user.groups.add(r_user_group)
 
@@ -42,6 +41,26 @@ class UserInnerSerializer(serializers.ModelSerializer):
         model = User
         fields = ('user_id', 'name', 'role')
         read_only_fields = ('user_id', 'role')
+
+class UserNameOnlySerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField(source='id', read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('user_id', 'name')
+        read_only_fields = ('user_id',)
+    
+    def to_internal_value(self, data):
+        name = data.get('name')
+        if not name:
+            raise serializers.ValidationError({"name": "This field is required."})
+
+        try:
+            # Fetch the existing user by name
+            user = User.objects.get(name=name)
+            return user
+        except User.DoesNotExist:
+            raise serializers.ValidationError({"name": "User with this name does not exist."})
 
 class UserRoleSetSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source='id', read_only=True)

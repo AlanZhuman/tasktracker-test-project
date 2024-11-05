@@ -17,7 +17,7 @@ def create_task(request):
 
         return 200, data.data
     elif data.is_valid() == False:
-        return 400, {'error': 'Provided data is invalid'}
+        return 400, {'error': 'Provided data is invalid', 'data:': data.data, 'error_info: ':data.errors}
     return 500, {'Serializer error:': data.errors}
 
 def update_task(request, slug):
