@@ -1,3 +1,5 @@
+#!/bin/bash
+
 psql --username "$POSTGRES_USER" <<-EOSQL
     CREATE USER taskuser WITH PASSWORD 'admin';
     CREATE DATABASE task_db;
@@ -9,6 +11,5 @@ psql --username "$POSTGRES_USER" <<-EOSQL
     ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO taskuser;
 EOSQL
 
-cd main
-python manage.py makemigrations
-python manage.py migrate
+python /app/main/manage.py makemigrations
+python /app/main/manage.py migrate

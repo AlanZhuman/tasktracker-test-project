@@ -40,3 +40,5 @@ COPY pyproject.toml poetry.lock /app/
 RUN poetry install
 
 COPY . /app/
+
+RUN chmod +x entrypoint.sh

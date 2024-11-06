@@ -23,7 +23,7 @@ services:
       - postgres
       - redis
     command: sh -c "poetry config virtualenvs.create true &&
-                    python manage.py runserver 0.0.0.0:8000"
+                    python main/manage.py runserver 0.0.0.0:8000"
 
   postgres:
     image: postgres:17.0-alpine3.20
