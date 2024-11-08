@@ -94,7 +94,7 @@ class StatusSerializer(serializers.ModelSerializer):
         instance.save()
         # Получение имени автора из data и попытка получить весь объект User (Нужен при создании или изменении Status-объекта)
         name_data = validated_data.get('edit_author', 'unknown')
-        name = name_data['name']
+        name = name_data.name
         try:
             user_author = User.objects.get(name=name)
         except ObjectDoesNotExist:
