@@ -1,6 +1,5 @@
 FROM python:3.12.3-slim
 
-# Установим рабочую директорию
 WORKDIR /app
 
 ARG DJANGO_ENV
@@ -33,10 +32,8 @@ RUN apt-get update \
   && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* \
   && pip install "poetry==$POETRY_VERSION" && poetry --version
 
-# Copy the Poetry files (pyproject.toml and poetry.lock) into the container
 COPY pyproject.toml poetry.lock /app/
 
-# Install dependencies:
 RUN poetry install
 
 COPY . /app/

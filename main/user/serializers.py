@@ -62,6 +62,14 @@ class UserNameOnlySerializer(serializers.ModelSerializer):
         except User.DoesNotExist:
             raise serializers.ValidationError({"name": "User with this name does not exist."})
 
+class CeleryUserNameOnlySerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField(source='id', read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('user_id', 'name')
+        read_only_fields = ('user_id',)
+
 class UserRoleSetSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source='id', read_only=True)
     role = serializers.CharField(write_only=True)

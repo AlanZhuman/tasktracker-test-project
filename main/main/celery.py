@@ -20,6 +20,6 @@ app.autodiscover_tasks(['notifications'])
 app.conf.beat_schedule = {
     "celery_expirity_check": {
         "task": 'notifications.tasks.celery_expirity_check',
-        "schedule": timedelta(seconds=10),
+        "schedule": timedelta(minutes=10),
     },
 }

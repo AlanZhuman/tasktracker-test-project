@@ -32,4 +32,11 @@ def email_notification(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated & (IsPm | IsAdminUser)])
 def telegram_notification(request):
-    return Response('Work in progress', status=status.HTTP_503_SERVICE_UNAVAILABLE)
+    status_code, response = send_tg(request)
+
+    if status_code == 202:
+        return Response(response, status=status.HTTP_202_ACCEPTED)
+    elif status_code == 400:
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+    elif status_code == 500:
+        return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

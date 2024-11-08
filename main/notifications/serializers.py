@@ -1,12 +1,12 @@
 from rest_framework import serializers
+from user.serializers import CeleryUserNameOnlySerializer
 from .models import Notification
 from user.models import User
 from tasktracker.models import Task
-from user.serializers import UserInnerSerializer
 from django.core.exceptions import ObjectDoesNotExist
 
 class NotificationSerializer(serializers.ModelSerializer):
-    recipient_list = UserInnerSerializer(many=True)
+    recipient_list = CeleryUserNameOnlySerializer(many=True)
     task_id = serializers.IntegerField()
 
     class Meta:
@@ -30,5 +30,4 @@ class NotificationSerializer(serializers.ModelSerializer):
                 mail.recipient_list.add(user)
             except ObjectDoesNotExist:
                 continue  # Игнорируем пользователей, которые не найдены
-
         return mail

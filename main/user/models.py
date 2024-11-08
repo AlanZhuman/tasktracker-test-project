@@ -17,9 +17,10 @@ class UserManager(BaseUserManager):
         return self.create_user(email, name, password, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
-    name = models.CharField(max_length=200, unique=True)
+    name = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
     telegram = models.CharField(max_length=32, blank=True, unique=True)
+    telegram_chat_id = models.CharField(unique=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 

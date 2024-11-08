@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'tasktracker',
     'notifications',
     'user',
+    'telegrambot',
     'rest_framework',
     'django_extensions',
     'drf_spectacular',
