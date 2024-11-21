@@ -14,7 +14,7 @@
    
 2. Перейдите в корневую папку проекта (не в main/main, просто в ./, где находится файл docker-compose.yml):  
    
-3. Заполните файл `.env.dev` своими данными. Пример можно найти в файле `.env_example` (ВАЖНО: не используйте файл .env, создайте .env.dev или измените имя .env в docker-compose.yml).
+3. Заполните файл `.env` своими данными. Пример можно найти в файле `.env_example`
    
 4. Введите в терминале:  
    `$ docker-compose up --build`
@@ -49,7 +49,7 @@
    
 2. Navigate to the main project folder (not in main/main, just in ./ where docker-compose.yml is located):  
    
-3. Fill up the `.env.dev` file with your own data. An example can be found in the `.env_example` file (IMPORTANT: DO NOT use the .env file; create .env.dev or change the .env filename in docker-compose.yml).
+3. Fill up the `.env` file with your own data. An example can be found in the `.env_example` file
    
 4. Type in the terminal:  
    `$ docker-compose up --build`
